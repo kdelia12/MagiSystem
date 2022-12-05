@@ -1,0 +1,4 @@
+#ignore all
+*
+!.gitignore 
+#ignore all files in the .git direct
