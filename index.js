@@ -151,7 +151,7 @@ client.on('message', async (message) => {
     axios
         .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
             prompt: prompt,
-            temperature: 0.3,
+            temperature: 0.6,
             max_tokens: 3000,
             top_p: 0.3,
             frequency_penalty: 0.5,
