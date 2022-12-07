@@ -145,12 +145,13 @@ client.on('message', async (message) => {
     prompt += 'Me (' + myName + '):'
 
     // Set typing state.
-    chat.sendStateTyping()
+
 
     // Query openAI with engine text-davinci-003.
     if (chat.isGroup) {
         //if start with Magi, or magi, or MAGI,
         if (message.body.startsWith('Magi,') || message.body.startsWith('magi,') || message.body.startsWith('MAGI,')) {
+            chat.sendStateTyping()
             axios
                 .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
                     prompt: prompt,
@@ -176,6 +177,7 @@ client.on('message', async (message) => {
                 .catch((error) => console.error(chalk.red('GPT-3 REQUEST FAILURE'), error))
         }
     } else {
+        chat.sendStateTyping()
         axios
             .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
                 prompt: prompt,
