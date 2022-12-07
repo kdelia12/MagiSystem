@@ -107,7 +107,7 @@ client.on('ready', async () => {
     })
 })
 
-// On message received.
+// On message received with prefix if in group chat.
 client.on('message', async (message) => {
 
     // Set my name (first name only).
@@ -148,30 +148,60 @@ client.on('message', async (message) => {
     chat.sendStateTyping()
 
     // Query openAI with engine text-davinci-003.
-    axios
-        .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
-            prompt: prompt,
-            temperature: 0.6,
-            max_tokens: 3000,
-            top_p: 0.3,
-            frequency_penalty: 0.5,
-            presence_penalty: 0.0,
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + process.env.OPENAI_SECRET_KEY,
-            },
-        })
-        .then((response) => {
-            // Get response.
-            const responseText = response.data.choices[0].text
-            // Send reply.
-            client.sendMessage(message.from, responseText)
-            // Log reply.
-            console.log(myName + ':', chalk.blueBright(responseText))
-        })
-        .catch((error) => console.error(chalk.red('GPT-3 REQUEST FAILURE'), error))
+    if (chat.isGroup) {
+        //if start with Magi, or magi, or MAGI,
+        if (message.body.startsWith('Magi,') || message.body.startsWith('magi,') || message.body.startsWith('MAGI,')) {
+            axios
+                .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
+                    prompt: prompt,
+                    temperature: 0.6,
+                    max_tokens: 3000,
+                    top_p: 0.3,
+                    frequency_penalty: 0.5,
+                    presence_penalty: 0.0,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + process.env.OPENAI_SECRET_KEY,
+                    },
+                })
+                .then((response) => {
+                    // Get response.
+                    const responseText = response.data.choices[0].text
+                    // Send reply.
+                    client.sendMessage(message.from, responseText)
+                    // Log reply.
+                    console.log(myName + ':', chalk.blueBright(responseText))
+                })
+                .catch((error) => console.error(chalk.red('GPT-3 REQUEST FAILURE'), error))
+        }
+    } else {
+        axios
+            .post('https://api.openai.com/v1/engines/text-davinci-003/completions', {
+                prompt: prompt,
+                temperature: 0.6,
+                max_tokens: 3000,
+                top_p: 0.3,
+                frequency_penalty: 0.5,
+                presence_penalty: 0.0,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + process.env.OPENAI_SECRET_KEY,
+                },
+            })
+            .then((response) => {
+                // Get response.
+                const responseText = response.data.choices[0].text
+                // Send reply.
+                client.sendMessage(message.from, responseText)
+                // Log reply.
+                console.log(myName + ':', chalk.blueBright(responseText))
+            })
+            .catch((error) => console.error(chalk.red('GPT-3 REQUEST FAILURE'), error))
+    }
 })
+
 
 // Initialize WhatsApp client.
 client.initialize()
