@@ -87,9 +87,6 @@ client.on('ready', async () => {
                     message: 'Select contacts:',
                     choices: contactChoices,
                     validate: function (answer) {
-                        if (answer.length < 1) {
-                            return 'You must choose at least one contact.'
-                        }
                         return true
                     },
                 },
@@ -149,7 +146,6 @@ client.on('message', async (message) => {
 
     // Query openAI with engine text-davinci-003.
     if (chat.isGroup) {
-        //if start with Magi, or magi, or MAGI,
         if (message.body.startsWith('Magi,') || message.body.startsWith('magi,') || message.body.startsWith('MAGI,')) {
             chat.sendStateTyping()
             axios
